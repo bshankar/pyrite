@@ -1,0 +1,22 @@
+{
+  "name": "pyrite",
+  "version": "0.0.1",
+  "description": "A minimal implementation of bitcoin like block chain",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bshankar/pyrite.git"
+  },
+  "author": "E Bhavani Shankar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bshankar/pyrite/issues"
+  },
+  "homepage": "https://github.com/bshankar/pyrite#readme",
+  "dependencies": {
+    "crypto-js": "^3.1.9-1"
+  }
+}
