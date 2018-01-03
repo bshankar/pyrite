@@ -1,11 +1,8 @@
 const {
-  TransactionInput,
   TransactionOutput,
-  computeFee,
-  computeBalance
+  computeFee
 } = require('./transactionUtil')
 
-const {Wallet} = require('./wallet')
 const { secureHash } = require('./util')
 
 class Transaction {
@@ -42,6 +39,10 @@ class GenesisTransaction {
   toObject (includeSignature = false) {
     // genesis transactions must be signed by some public key?
     return super.toObject(false)
+  }
+
+  hash () {
+    return secureHash(JSON.stringify(this.toObject()))
   }
 }
 
