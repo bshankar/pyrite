@@ -10,6 +10,7 @@ class Wallet {
 
     // Extract public key from the private key
     this.publicKey = secp256k1.publicKeyCreate(this.privateKey)
+    this.address = this.publicKey
   }
 
   sign (msg) {
