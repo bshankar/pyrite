@@ -1,7 +1,7 @@
 const cryptoJS = require('crypto-js')
 
 function secureHash (msg) {
-  return cryptoJS.sha256(msg).toString(cryptoJS.enc.Hex)
+  return cryptoJS.SHA256(msg).toString(cryptoJS.enc.Hex)
 }
 
 function mine (msg, difficulty = 1) {
@@ -14,3 +14,5 @@ function mine (msg, difficulty = 1) {
     n += 1
   }
 }
+
+module.exports = {secureHash, mine}
