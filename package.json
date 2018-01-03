@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/bshankar/pyrite#readme",
   "dependencies": {
-    "crypto-js": "^3.1.9-1"
+    "crypto-js": "^3.1.9-1",
+    "secp256k1": "^3.4.0"
   }
 }
