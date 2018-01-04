@@ -18,7 +18,7 @@ class Block {
     this.ancestor = ancestor
 
     if (skipVerify === false) {
-      assert(transactions.every(t => verifyTransaction(t)).valid === true,
+      assert(transactions.every(t => verifyTransaction(t).valid === true),
         'some transactions in the block are invalid')
     }
 
@@ -60,10 +60,6 @@ class GenesisBlock extends Block {
       block.hash = this.hash
     }
     return block
-  }
-
-  fee () {
-    return 0
   }
 }
 
