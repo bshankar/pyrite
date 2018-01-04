@@ -1,10 +1,11 @@
 const {Wallet} = require('../wallet')
 const {GenesisBlock, Block} = require('../block')
-const {verifyBlock} = require('../block_util')
+const {verifyBlock, collectTransactions} = require('../block_util')
 const {Transaction} = require('../transaction')
 const {
   TransactionInput,
-  TransactionOutput
+  TransactionOutput,
+  computeBalance
 } = require('../transaction_util')
 
 const alice = new Wallet()
@@ -41,3 +42,8 @@ console.log('block2        : ' + block2.hash + ' with fee=' + block2.fee())
 
 console.log(verifyBlock(block1, genesisBlock))
 console.log(verifyBlock(block2, genesisBlock))
+
+const transactions = collectTransactions(block2, genesisBlock)
+console.log('Alice has ' + computeBalance(alice.address, transactions) + ' pyrites')
+console.log('Bob has ' + computeBalance(bob.address, transactions) + ' pyrites')
+console.log('Walter has ' + computeBalance(walter.address, transactions) + ' pyrites')
