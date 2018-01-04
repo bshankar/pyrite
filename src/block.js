@@ -1,15 +1,8 @@
 const { computeFee, verifyTransaction } = require('./transaction_util')
 const { GenesisTransaction } = require('./transaction')
 const { secureHash, mine } = require('./util')
+const { blockIncentive, difficulty, computeTotalFee } = require('./block_util')
 const assert = require('assert')
-
-// We give 25 pyrites to someone who helped to verify a block
-const blockIncentive = 25
-const difficulty = 2
-
-function computeTotalFee (transactions) {
-  return transactions.reduce((a, t) => a + computeFee(t.inputs, t.outputs), 0)
-}
 
 class Block {
   constructor (transactions, ancestor, minerAddress, skipVerify = false) {
