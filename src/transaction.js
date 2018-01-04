@@ -37,8 +37,14 @@ class GenesisTransaction {
   }
 
   toObject (includeSignature = false) {
-    // genesis transactions must be signed by some public key?
-    return super.toObject(false)
+    const transaction = {
+      inputs: this.inputs,
+      outputs: this.outputs,
+      fee: this.fees
+    }
+    // Must be signed by some known public key?
+    // if (includeSignature === true) transaction.signature = this.signature
+    return transaction
   }
 
   hash () {
