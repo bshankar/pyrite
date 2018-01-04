@@ -24,14 +24,6 @@ function transactionsValid (block) {
   }
 }
 
-function noSpentTransactions (block, usedOutputs) {
-  // verify that transaction outputs don\'t contain spent transactions
-  if (block.transactions.every(t => t.inputs
-    .every(i => usedOutputs[t.parentOutput] === undefined)) === false) {
-    return validObject(false, 'Some transactions contain spent transactions')
-  }
-}
-
 function firstTransactionMinerReward (block) {
   const tx = block.transactions[0]
   if (isGenesisTransaction(tx) === false) {
@@ -55,11 +47,22 @@ function onlyFirstTransactionGenesis (block) {
   }
 }
 
-function verifyBlock (block, genesisBlock, usedOutputs = {}) {
+function verifyBlock (block, genesisBlock, usedOutputs = new Map()) {
   const checked = hashStartsWithPrefix(block) || transactionsValid(block) ||
-        noSpentTransactions(block, usedOutputs) || firstTransactionMinerReward(block) ||
+        firstTransactionMinerReward(block) ||
         onlyFirstTransactionGenesis(block)
   if (checked !== undefined) return checked
+
+  // no spent transactions
+  for (let i = 0; i < block.transactions.length; ++i) {
+    for (let j = 0; j < block.transactions[i].inputs.length; ++j) {
+      const key = block.transactions[i].inputs[j].parentOutput
+      if (usedOutputs.get(key) !== undefined) {
+        return validObject(false, 'Transaction uses an already spent amount')
+      }
+      usedOutputs.set(key, true)
+    }
+  }
 
   // verify ancestors upto genesisBlock
   if (block.hash !== genesisBlock.hash &&
