@@ -40,10 +40,45 @@ console.log('block1        : ' + block1.hash + ' with fee=' + block1.fee())
 const block2 = new Block([t3, t4], block1, walter.address)
 console.log('block2        : ' + block2.hash + ' with fee=' + block2.fee())
 
+console.log('Validity of block1')
 console.log(verifyBlock(block1, genesisBlock))
+console.log('Validity of block2')
 console.log(verifyBlock(block2, genesisBlock))
 
 const transactions = collectTransactions(block2, genesisBlock)
 console.log('Alice has ' + computeBalance(alice.address, transactions) + ' pyrites')
 console.log('Bob has ' + computeBalance(bob.address, transactions) + ' pyrites')
 console.log('Walter has ' + computeBalance(walter.address, transactions) + ' pyrites')
+
+// Attacks
+
+// Walter tries to spend Bob's money
+let tx = new Transaction(
+  walter,
+  [new TransactionInput(t4, 1)],
+  [new TransactionOutput(walter.address, 1.0)]
+)
+
+// Walter disables checks in his Block constructor
+// And tries to spend someone else's money
+let block = new Block([tx], block2, walter.address, true)
+console.log('Validity of a block while spending someone else\'s money:')
+console.log(verifyBlock(block, genesisBlock))
+
+// Bob tries to tamper a transaction
+// This is a transaction signed by bob
+tx = new Transaction(
+  bob,
+  [new TransactionInput(t2, 0), new TransactionInput(t3, 0)],
+  [new TransactionOutput(walter.address, 8.0), new TransactionOutput(bob.address, 1.0)]
+)
+// And modified by the miner
+tx.outputs[0].amount += 4
+block = new Block([t3, tx], block1, walter.address, true)
+console.log('Validity of a tampered block')
+console.log(verifyBlock(block, genesisBlock))
+
+// Bob tries to use a transaction twice
+block = new Block([t3, t3, t4], block1, bob.address, true)
+console.log('Validity of a block with repeated transaction')
+console.log(verifyBlock(block, genesisBlock))
