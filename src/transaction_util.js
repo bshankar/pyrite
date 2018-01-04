@@ -32,6 +32,7 @@ class TransactionOutput {
 }
 
 function computeFee (inputs, outputs) {
+  if (inputs.length === 0) return 0
   return inputs.reduce((a, i) => a + i.transaction.outputs[i.outputIndex].amount, 0) -
     outputs.reduce((a, o) => a + o.amount, 0)
 }
