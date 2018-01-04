@@ -1,4 +1,5 @@
 const {verifySignature} = require('./wallet')
+const {validObject} = require('./util')
 
 class TransactionInput {
   constructor (transaction, outputIndex) {
@@ -44,14 +45,14 @@ function computeBalance (walletAddress, transactions) {
       .reduce((o, tout) => o + tout.amount, 0), 0)
 }
 
-function validObject (valid, message) {
-  return {valid: valid, message: message}
+function isGenesisTransaction(transaction) {
+  return transaction.inputs.length === 0
 }
 
 function verifyTransaction (transaction) {
   // all the inputs must belong to the same wallet
   // Transaction must be signed by the owner of the said wallet
-  if (transaction.inputs.length === 0) {
+  if (isGenesisTransaction(transaction) === true) {
     return validObject(true, 'genesis')
   }
   if (transaction.inputs.every(i => verifyTransaction(i.transaction)) === false) {
@@ -76,5 +77,6 @@ module.exports = {
   TransactionOutput,
   computeFee,
   computeBalance,
+  isGenesisTransaction,
   verifyTransaction
 }

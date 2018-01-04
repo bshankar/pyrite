@@ -1,5 +1,9 @@
 const cryptoJS = require('crypto-js')
 
+function validObject (valid, message) {
+  return {valid: valid, message: message}
+}
+
 function secureHash (msg) {
   return cryptoJS.SHA256(msg).toString(cryptoJS.enc.Hex)
 }
@@ -15,4 +19,4 @@ function mine (msg, difficulty = 1) {
   }
 }
 
-module.exports = {secureHash, mine}
+module.exports = {validObject, secureHash, mine}
