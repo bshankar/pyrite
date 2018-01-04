@@ -1,5 +1,6 @@
 const {Wallet} = require('../wallet')
 const {GenesisBlock, Block} = require('../block')
+const {verifyBlock} = require('../block_util')
 const {Transaction} = require('../transaction')
 const {
   TransactionInput,
@@ -32,8 +33,11 @@ const t4 = new Transaction(
   [new TransactionOutput(walter.address, 8.0), new TransactionOutput(bob.address, 1.0)]
 )
 
-const block1 = new Block([], genesisBlock, walter.address)
+const block1 = new Block([t2], genesisBlock, walter.address)
 console.log('block1        : ' + block1.hash + ' with fee=' + block1.fee())
 
 const block2 = new Block([t3, t4], block1, walter.address)
 console.log('block2        : ' + block2.hash + ' with fee=' + block2.fee())
+
+console.log(verifyBlock(block1, genesisBlock))
+console.log(verifyBlock(block2, genesisBlock))
