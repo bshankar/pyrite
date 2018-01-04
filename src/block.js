@@ -1,6 +1,7 @@
 const { computeFee, verifyTransaction } = require('./transaction_util')
 const { GenesisTransaction } = require('./transaction')
 const { secureHash, mine } = require('./util')
+const assert = require('assert')
 
 // We give 25 pyrites to someone who helped to verify a block
 const blockIncentive = 25
@@ -45,7 +46,7 @@ class Block {
 
 class GenesisBlock extends Block {
   constructor (minerAddress) {
-    super([], null, minerAddress)
+    super([], null, minerAddress, true)
   }
 
   toObject (includeHash = true) {
@@ -59,6 +60,10 @@ class GenesisBlock extends Block {
       block.hash = this.hash
     }
     return block
+  }
+
+  fee () {
+    return 0
   }
 }
 
