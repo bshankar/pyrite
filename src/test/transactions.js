@@ -37,7 +37,6 @@ const t4 = new Transaction(
 )
 
 const transactions = [t1, t2, t3, t4]
-
 console.log('Alice has ' + computeBalance(alice.address, transactions) + ' pyrites')
 console.log('Bob has ' + computeBalance(bob.address, transactions) + ' pyrites')
 console.log('Walter has ' + computeBalance(walter.address, transactions) + ' pyrites')
