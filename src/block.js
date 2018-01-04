@@ -62,4 +62,4 @@ class GenesisBlock extends Block {
   }
 }
 
-module.exports = {Block, GenesisBlock}
+module.exports = {Block, GenesisBlock, blockIncentive, difficulty}
