@@ -1,3 +1,5 @@
+const {verifySignature} = require('./wallet')
+
 class TransactionInput {
   constructor (transaction, outputIndex) {
     // points to the output of another transaction
@@ -42,9 +44,37 @@ function computeBalance (walletAddress, transactions) {
       .reduce((o, tout) => o + tout.amount, 0), 0)
 }
 
+function validObject (valid, message) {
+  return {valid: valid, message: message}
+}
+
+function verifyTransaction (transaction) {
+  // all the inputs must belong to the same wallet
+  // Transaction must be signed by the owner of the said wallet
+  if (transaction.inputs.length === 0) {
+    return validObject(true, 'genesis')
+  }
+  if (transaction.inputs.every(i => verifyTransaction(i.transaction)) === false) {
+    return validObject(false, 'Invalid parent transaction')
+  }
+  const firstInputAddress = transaction.inputs[0].parentOutput.recipientAddress
+  if (transaction.inputs.every(i => i.parentOutput.recipientAddress === firstInputAddress) === false) {
+    return validObject(false, 'Transaction belongs to multiple wallets')
+  }
+  const transactionMessage = JSON.stringify(transaction.toObject(false))
+  if (verifySignature(transactionMessage, transaction.signature.signature, firstInputAddress) === false) {
+    return validObject(false, 'Transaction signature is invalid. Trying to spend someone else\'s money?')
+  }
+  if (computeFee(transaction.inputs, transaction.outputs) < 0) {
+    return validObject(false, 'Transaction fee cannot be negative')
+  }
+  return validObject(true, 'Normal transaction')
+}
+
 module.exports = {
   TransactionInput,
   TransactionOutput,
   computeFee,
-  computeBalance
+  computeBalance,
+  verifyTransaction
 }
