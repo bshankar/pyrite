@@ -4,7 +4,7 @@ const {
   TransactionInput,
   TransactionOutput,
   verifyTransaction
-} = require('../transactionUtil')
+} = require('../transaction_util')
 const util = require('util')
 
 const alice = new Wallet()

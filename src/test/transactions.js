@@ -1,6 +1,6 @@
 const {Wallet} = require('../wallet')
 const {Transaction, GenesisTransaction} = require('../transaction')
-const {TransactionInput, TransactionOutput, computeBalance} = require('../transactionUtil')
+const {TransactionInput, TransactionOutput, computeBalance} = require('../transaction_util')
 
 const alice = new Wallet()
 const bob = new Wallet()

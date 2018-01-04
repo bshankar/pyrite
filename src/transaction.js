@@ -1,7 +1,7 @@
 const {
   TransactionOutput,
   computeFee
-} = require('./transactionUtil')
+} = require('./transaction_util')
 
 const { secureHash } = require('./util')
 
