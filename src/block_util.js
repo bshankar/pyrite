@@ -69,4 +69,18 @@ function verifyBlock (block, genesisBlock, usedOutputs = {}) {
   return validObject(true, 'Verified block')
 }
 
-module.exports = {verifyBlock, computeTotalFee, blockIncentive, difficulty}
+function collectTransactions (block, genesisBlock) {
+  let transactions = block.transactions
+  if (block.hash !== genesisBlock.hash) {
+    transactions = transactions.concat(collectTransactions(block.ancestor, genesisBlock))
+  }
+  return transactions
+}
+
+module.exports = {
+  verifyBlock,
+  computeTotalFee,
+  blockIncentive,
+  difficulty,
+  collectTransactions
+}
