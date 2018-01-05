@@ -46,7 +46,7 @@ function computeBalance (walletAddress, transactions) {
       .reduce((o, tout) => o + tout.amount, 0), 0)
 }
 
-function isGenesisTransaction(transaction) {
+function isGenesisTransaction (transaction) {
   return transaction.inputs.length === 0
 }
 
