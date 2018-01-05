@@ -12,10 +12,14 @@ const alice = new Wallet()
 const bob = new Wallet()
 const walter = new Wallet()
 
+// Alice mines the genesis block A + 25
 const genesisBlock = new GenesisBlock(alice.address)
 console.log('genesis block : ' + genesisBlock.hash + ' with fee=' + genesisBlock.fee())
 
 const t1 = genesisBlock.transactions[0]
+
+// Alice --> Bob 5
+// Alice --> Walter 5
 const t2 = new Transaction(
   alice,
   [new TransactionInput(t1, 0)],
@@ -23,11 +27,14 @@ const t2 = new Transaction(
     new TransactionOutput(alice.address, 15.0),
     new TransactionOutput(walter.address, 5.0)]
 )
+
+// Walter --> Bob 5
 const t3 = new Transaction(
   walter,
   [new TransactionInput(t2, 2)],
   [new TransactionOutput(bob.address, 5.0)])
 
+// Bob --> Walter 8
 const t4 = new Transaction(
   bob,
   [new TransactionInput(t2, 0), new TransactionInput(t3, 0)],
@@ -65,7 +72,7 @@ let block = new Block([tx], block2, walter.address, true)
 console.log('Validity of a block while spending someone else\'s money:')
 console.log(verifyBlock(block, genesisBlock))
 
-// Bob tries to tamper a transaction
+// Walter tries to tamper a transaction
 // This is a transaction signed by bob
 tx = new Transaction(
   bob,
