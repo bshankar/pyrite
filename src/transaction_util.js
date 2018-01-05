@@ -50,26 +50,44 @@ function isGenesisTransaction (transaction) {
   return transaction.inputs.length === 0
 }
 
-function verifyTransaction (transaction) {
-  // all the inputs must belong to the same wallet
-  // Transaction must be signed by the owner of the said wallet
-  if (isGenesisTransaction(transaction) === true) {
-    return validObject(true, 'genesis')
-  }
+function validParentTransaction (transaction) {
   if (transaction.inputs.every(i => verifyTransaction(i.transaction)) === false) {
     return validObject(false, 'Invalid parent transaction')
   }
+}
+
+function usesOneWallet (transaction) {
   const firstInputAddress = transaction.inputs[0].parentOutput.recipientAddress
   if (transaction.inputs.every(i => i.parentOutput.recipientAddress === firstInputAddress) === false) {
     return validObject(false, 'Transaction belongs to multiple wallets')
   }
+}
+
+function hasValidSignature (transaction) {
+  const firstInputAddress = transaction.inputs[0].parentOutput.recipientAddress
   const transactionMessage = JSON.stringify(transaction.toObject(false))
   if (verifySignature(transactionMessage, transaction.signature.signature, firstInputAddress) === false) {
     return validObject(false, 'Transaction signature is invalid. Trying to spend someone else\'s money?')
   }
+}
+
+function nonNegativeFee (transaction) {
   if (computeFee(transaction.inputs, transaction.outputs) < 0) {
     return validObject(false, 'Transaction fee cannot be negative')
   }
+}
+
+function verifyTransaction (transaction) {
+  // all the inputs must belong to the same wallet
+  // Transaction must be signed by the owner of the said wallet
+  if (isGenesisTransaction(transaction) === true) {
+    // needs improvement
+    return validObject(true, 'genesis')
+  }
+  const invalidObj = validParentTransaction(transaction) ||
+        usesOneWallet(transaction) || hasValidSignature(transaction) ||
+        nonNegativeFee(transaction)
+  if (invalidObj !== undefined) return invalidObj 
   return validObject(true, 'Normal transaction')
 }
 
