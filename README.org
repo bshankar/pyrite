@@ -1,0 +1,22 @@
+* Pyrite
+
+  *Pyrite* / Iron Sulfide is a mineral called fool's gold.
+
+  A minimal implementation of Bitcoin like cryptocurrency in nodejs
+  for educational purposes only. There is no network component
+  currently. So, it cannot be used as a currency.
+
+  Pyrite also contains a [[https://github.com/bshankar/merkle.git][simple Merkle Tree implementation]].
+
+* Usage
+
+The folder =/src/test/= contains various demos you can run.
+
+#+BEGIN_SRC shell
+git clone --recursive git://github.com/bshankar/pyrite.git
+cd pyrite
+npm i
+cd src/merkle
+npm i
+node ../test/<test file>   # Run a demo
+#+END_SRC
