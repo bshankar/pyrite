@@ -1,3 +1,4 @@
+const {secureHash} = require('../util')
 const {Wallet} = require('../wallet')
 const {GenesisBlock, Block} = require('../block')
 const {verifyBlock, collectTransactions} = require('../block_util')
@@ -7,6 +8,7 @@ const {
   TransactionOutput,
   computeBalance
 } = require('../transaction_util')
+const {BlockChain} = require('../blockchain')
 
 const alice = new Wallet()
 const bob = new Wallet()
@@ -24,8 +26,8 @@ const t2 = new Transaction(
   alice,
   [new TransactionInput(t1, 0)],
   [new TransactionOutput(bob.address, 5.0),
-    new TransactionOutput(alice.address, 15.0),
-    new TransactionOutput(walter.address, 5.0)]
+   new TransactionOutput(alice.address, 15.0),
+   new TransactionOutput(walter.address, 5.0)]
 )
 
 // Walter --> Bob 5
@@ -56,6 +58,16 @@ const transactions = collectTransactions(block2, genesisBlock)
 console.log('Alice has ' + computeBalance(alice.address, transactions) + ' pyrites')
 console.log('Bob has ' + computeBalance(bob.address, transactions) + ' pyrites')
 console.log('Walter has ' + computeBalance(walter.address, transactions) + ' pyrites')
+
+const bc = new BlockChain([genesisBlock, block1, block2])
+console.log('verifying blockchain\'s integrity')
+console.log(bc.verify())
+console.log(bc.leaves)
+const block1Hash = secureHash(JSON.stringify(block1.toObject()))
+const auditTrail = bc.auditProof(block1Hash)
+console.log(auditTrail)
+console.log('Verifying audit proof on merkle tree')
+console.log(bc.verifyAuditProof(bc.rootNode.hash, block1Hash, auditTrail))
 
 // Attacks
 
