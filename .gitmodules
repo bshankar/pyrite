@@ -1,0 +1,3 @@
+[submodule "src/merkle"]
+	path = src/merkle
+	url = git@github.com:bshankar/merkle.git
